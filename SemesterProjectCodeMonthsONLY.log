@@ -1,0 +1,76 @@
+
+--- Job SemesterProjectCodeMonthsONLY.gms Start 12/12/20 22:20:51 32.2.0 rc62c018 WEX-WEI x86 64bit/MS Windows
+--- Applying:
+    C:\GAMS\32\gmsprmNT.txt
+--- GAMS Parameters defined
+    Input "C:\Users\Sharp Student\Documents\WRSA\GAMS\GitHub\CEE-6410-Campana\SemesterProjectCodeMonthsONLY.gms"
+    PageWidth 80
+    PageSize 0
+    PageContr 3
+    Action CE
+    ScrDir "C:\Users\Sharp Student\Documents\WRSA\GAMS\GitHub\CEE-6410-Campana\225a\"
+    SysDir C:\GAMS\32\
+    WorkDir "C:\Users\Sharp Student\Documents\WRSA\GAMS\GitHub\CEE-6410-Campana\"
+    LogOption 3
+    DFormat 0
+    TFormat 0
+    ErrorLog 99
+    IDE 1
+GAMS 32.2.0   Copyright (C) 1987-2020 GAMS Development. All rights reserved
+Licensee: Small MUD - 5 User License                     G200622/0001AP-GEN
+          Utah State University, Utah Water Research Laboratory      DC7087
+          C:\GAMS\32\gamslice.txt
+--- Starting compilation
+--- SemesterProjectCodeMonthsONLY.gms(397) 3 Mb
+--- Starting execution: elapsed 0:00:00.004
+--- SemesterProjectCodeMonthsONLY.gms(380) 4 Mb
+--- Generating MIP model FlamingGorge
+--- SemesterProjectCodeMonthsONLY.gms(383) 4 Mb
+---   372 rows  131 columns  570 non-zeroes
+---   10 discrete-columns
+--- Executing CPLEX (Solvelink=2): elapsed 0:00:00.045
+
+IBM ILOG CPLEX   32.2.0 rc62c018 Released Aug 26, 2020 WEI x86 64bit/MS Window
+--- GAMS/Cplex Link licensed for continuous and discrete problems.
+Cplex 12.10.0.0
+
+Reading data...
+Starting Cplex...
+Space for names approximately 0.01 Mb
+Use option 'names no' to turn use of names off
+Version identifier: 12.10.0.0 | 2019-11-26 | 843d4de2ae
+CPXPARAM_Advance                                 0
+CPXPARAM_Threads                                 1
+CPXPARAM_Parallel                                1
+CPXPARAM_MIP_Display                             4
+CPXPARAM_MIP_Tolerances_AbsMIPGap                0
+CPXPARAM_WorkDir                                 "C:\Users\Sharp Student\Documents\WRSA\GAMS\GitHub\CEE-6410-Campana\225a\"
+Tried aggregator 2 times.
+MIP Presolve eliminated 301 rows and 55 columns.
+Aggregator did 63 substitutions.
+Reduced MIP has 8 rows, 13 columns, and 26 nonzeros.
+Reduced MIP has 5 binaries, 0 generals, 0 SOSs, and 0 indicators.
+Presolve time = 0.08 sec. (0.36 ticks)
+Probing time = 0.00 sec. (0.00 ticks)
+Presolve time = 0.00 sec. (0.01 ticks)
+
+Root node processing (before b&c):
+  Real time             =    0.08 sec. (0.42 ticks)
+Sequential b&c:
+  Real time             =    0.00 sec. (0.00 ticks)
+                          ------------
+Total (root+branch&cut) =    0.08 sec. (0.42 ticks)
+MIP status(103): integer infeasible
+Cplex Time: 0.08sec (det. 0.42 ticks)
+CPLEX Error  1217: No solution exists.
+Problem is integer infeasible.
+--- Reading solution for model FlamingGorge
+--- Executing after solve: elapsed 0:00:00.173
+--- SemesterProjectCodeMonthsONLY.gms(386) 4 Mb
+--- GDX File C:\Users\Sharp Student\Documents\WRSA\GAMS\GitHub\CEE-6410-Campana\SemesterProj.gdx
+--- SemesterProjectCodeMonthsONLY.gms(388) 4 Mb
+GDX2XLS          32.2.0 rc62c018 Released Aug 26, 2020 WEI x86 64bit/MS Window
+Output file: C:\Users\Sharp Student\Documents\WRSA\GAMS\GitHub\CEE-6410-Campana\SemesterProj.xlsx
+(Created backup file)
+*** Status: Normal completion
+--- Job SemesterProjectCodeMonthsONLY.gms Stop 12/12/20 22:20:52 elapsed 0:00:01.740

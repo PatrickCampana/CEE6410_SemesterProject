@@ -1,0 +1,758 @@
+GAMS 32.2.0  rc62c018 Released Aug 26, 2020 WEX-WEI x86 64bit/MS Windows - 12/12/20 22:20:51 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+       
+      CEE 6410 - Water Resources Systems Analysis
+      Semester Project Code
+       
+   7   
+   8  * 1. DEFINE MODEL DIMENSIONS
+   9  SETS Loc Locations in Model / Res "For storage or water surface elevation 
+      in F.G."
+  10            Dam "For Flow out of F.G. Dam"/
+  11   
+  12   
+  13       Years number of years modeled /Y1*Y5/
+  14   
+  15       Months variable for each month of the year M1 corresponds to January 
+      /M1*M60/
+  16       HydrologicScenarios the three different hydrologic scenarios I envisi
+      oned for this model /W1*W3/;
+  17   
+  18  * 2. DEFINE INPUT DATA
+  19  PARAMETERS
+  20   
+  21  *Hydropower Constraints
+  22     HydroPower(Months) Hydropower Monthly Flow Volumes
+  23           /
+  24  M1        110062.8099
+  25  M2        108932.2314
+  26  M3        50745.12397
+  27  M4        49731.57025
+  28  M5        51806.28099
+  29  M6        124661.157
+  30  M7        89708.42975
+  31  M8        108694.2149
+  32  M9        98433.71901
+  33  M10        63808.26446
+  34  M11        77208.59504
+  35  M12        105988.7603
+  36  M13        110062.8099
+  37  M14        108932.2314
+  38  M15        50745.12397
+  39  M16        49731.57025
+  40  M17        51806.28099
+  41  M18        124661.157
+  42  M19        89708.42975
+  43  M20        108694.2149
+  44  M21        98433.71901
+  45  M22        63808.26446
+  46  M23        77208.59504
+  47  M24        105988.7603
+  48  M25        110062.8099
+  49  M26        108932.2314
+  50  M27        50745.12397
+  51  M28        49731.57025
+  52  M29        51806.28099
+  53  M30        124661.157
+  54  M31        89708.42975
+  55  M32        108694.2149
+  56  M33        98433.71901
+  57  M34        63808.26446
+  58  M35        77208.59504
+  59  M36        105988.7603
+  60  M37        110062.8099
+  61  M38        108932.2314
+  62  M39        50745.12397
+  63  M40        49731.57025
+  64  M41        51806.28099
+  65  M42        124661.157
+  66  M43        89708.42975
+  67  M44        108694.2149
+  68  M45        98433.71901
+  69  M46        63808.26446
+  70  M47        77208.59504
+  71  M48        105988.7603
+  72  M49        110062.8099
+  73  M50        108932.2314
+  74  M51        50745.12397
+  75  M52        49731.57025
+  76  M53        51806.28099
+  77  M54        124661.157
+  78  M55        89708.42975
+  79  M56        108694.2149
+  80  M57        98433.71901
+  81  M58        63808.26446
+  82  M59        77208.59504
+  83  M60        105988.7603
+  84  /
+  85   
+  86   
+  87  *Flow Into Flaming Gorge Dam
+  88   FlowIn(Months) Flow Into F.G.
+  89  /
+  90  M1        110062.81
+  91  M2        108932.23
+  92  M3        50745.12
+  93  M4        49731.57
+  94  M5        51806.28
+  95  M6        124661.16
+  96  M7        89708.43
+  97  M8        108694.21
+  98  M9        98433.72
+  99  M10        63808.26
+ 100  M11        77208.60
+ 101  M12        105988.76
+ 102  M13        110062.81
+ 103  M14        108932.23
+ 104  M15        50745.12
+ 105  M16        49731.57
+ 106  M17        51806.28
+ 107  M18        124661.16
+ 108  M19        89708.43
+ 109  M20        108694.21
+ 110  M21        98433.72
+ 111  M22        63808.26
+ 112  M23        77208.60
+ 113  M24        105988.76
+ 114  M25        110062.81
+ 115  M26        108932.23
+ 116  M27        50745.12
+ 117  M28        49731.57
+ 118  M29        51806.28
+ 119  M30        124661.16
+ 120  M31        89708.43
+ 121  M32        108694.21
+ 122  M33        98433.72
+ 123  M34        63808.26
+ 124  M35        77208.60
+ 125  M36        105988.76
+ 126  M37        110062.81
+ 127  M38        108932.23
+ 128  M39        50745.12
+ 129  M40        49731.57
+ 130  M41        51806.28
+ 131  M42        124661.16
+ 132  M43        89708.43
+ 133  M44        108694.21
+ 134  M45        98433.72
+ 135  M46        63808.26
+ 136  M47        77208.60
+ 137  M48        105988.76
+ 138  M49        110062.81
+ 139  M50        108932.23
+ 140  M51        50745.12
+ 141  M52        49731.57
+ 142  M53        51806.28
+ 143  M54        124661.16
+ 144  M55        89708.43
+ 145  M56        108694.21
+ 146  M57        98433.72
+ 147  M58        63808.26
+ 148  M59        77208.60
+ 149  M60        105988.76
+ 150  /
+ 151   
+ 152  BaseFlows(Months) Base Flow Constraints In Each Year Monthly Flow Volumes 
+      (Ac-ft)
+ 153  /M1        61487.60331
+ 154  M2        55537.19008
+ 155  M3        49190.08264
+ 156  M4        47603.30579
+ 157  M5        50578.5124
+ 158  M6       0
+ 159  M7        98380.16529
+ 160  M8        98380.16529
+ 161  M9        95206.61157
+ 162  M10        52264.46281
+ 163  M11        50578.5124
+ 164  M12        61487.60331
+ 165  M13        61487.60331
+ 166  M14        55537.19008
+ 167  M15        49190.08264
+ 168  M16        47603.30579
+ 169  M17        50578.5124
+ 170  M18        0
+ 171  M19        98380.16529
+ 172  M20        98380.16529
+ 173  M21        95206.61157
+ 174  M22        52264.46281
+ 175  M23        50578.5124
+ 176  M24        61487.60331
+ 177  M25        61487.60331
+ 178  M26        55537.19008
+ 179  M27        49190.08264
+ 180  M28        47603.30579
+ 181  M29        50578.5124
+ 182  M30        0
+ 183  M31        98380.16529
+ 184  M32        98380.16529
+ 185  M33        95206.61157
+ 186  M34        52264.46281
+ 187  M35        50578.5124
+ 188  M36        61487.60331
+ 189  M37        61487.60331
+ 190  M38        55537.19008
+ 191  M39        49190.08264
+ 192  M40        47603.30579
+ 193  M41        50578.5124
+ 194  M42        0
+ 195  M43        98380.16529
+ 196  M44        98380.16529
+ 197  M45        95206.61157
+ 198  M46        52264.46281
+ 199  M47        50578.5124
+ 200  M48        61487.60331
+ 201  M49        61487.60331
+ 202  M50        55537.19008
+ 203  M51        49190.08264
+ 204  M52        47603.30579
+ 205  M53        50578.5124
+ 206  M54        0
+ 207  M55        98380.16529
+ 208  M56        98380.16529
+ 209  M57        95206.61157
+ 210  M58        52264.46281
+ 211  M59        50578.5124
+ 212  M60        61487.60331
+ 213  /;
+ 214   
+ 215   
+ 216  *LTRP enviromental flows for each year obtained by  subtracting Yampa rive
+      r flows
+ 217  *From Green River in Jensen Utah flows to approximate Flaming Gorge Releas
+      e in June
+ 218  *These flows also assume the entirety of the LTRP release occurs in the mo
+      nth of June
+ 219   
+ 220  *W1 is a dry year, W2 is a average year, W3 is a wet year
+ 221  Table EnviroFlows(Years,HydrologicScenarios) Enviromental Flow Release For
+       Each Year and Hydrologic Scenario
+ 222            W1                    W2            W3
+ 223  Y1        167147.11        287623.14        473652.89
+ 224  Y2        167147.11        287623.14        473652.89
+ 225  Y3        167147.11        287623.14        473652.89
+ 226  Y4        167147.11        287623.14        473652.89
+ 227  Y5        167147.11        287623.14        473652.89;
+ 228   
+ 229   
+ 230  *Baseflow Constraints:
+ 231  *Note This is set up so that It can be adjusted for different Hydrologic
+ 232  *Or Colorado Pike Minnow Summer Base Flow constraints
+ 233  *Currently it is set for my "Wet" hydrologic Scenario 5 years in a row and
+       incorperates
+ 234  *colorado pikeminnow b.f. constraints into baseflow constraints
+ 235   
+ 236   
+ 237   
+ 238   
+ 239   
+ 240  SCALARS
+ 241   
+ 242  *Maximum outflow possible in one month. Does not consideer using the spill
+      way
+ 243           MaxFlowOut  Maximum Flow Out In One Month (Ac-ft)   /511736/
+ 244   
+ 245  *Maximum F.G. storage s.t.  1 to 10% exceedance can be routed at anytime
+ 246           MaxStore Maximum Water Storage in F.G. Reservoir (Ac-ft) /3086976
+      /
+ 247   
+ 248  *Minimum F.G. storage set midway between rated hydropower storage and mini
+      mum hydropower storage
+ 249           MinStore Minimum Water Storage in F.G. Reservoir (Ac-ft)/545757.5
+      /
+ 250   
+ 251  *Setting Intial Storage In Reservoir For Model, I arbitrarily chose this v
+      alue
+ 252  *It corresponds to a reservoir elevation of 6009.27 ft which may be a bit 
+      high
+ 253  *in reality for january. Model results are likely sensitive to this value
+ 254   
+ 255  *$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+      $$$$$$
+ 256           IntStrg Intial Reservoir Storage of F.G. Reservoir (Ac-ft) /26177
+      26.50/
+ 257           TotRelease Total Volume of Water Released Over Model Period /7470
+      874.141/;
+ 258  *$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$2$$
+      $$$$$$
+ 259   
+ 260  *Set Upper and lower bounds for binary Variables
+ 261  *         BinLow Lowerbound of Binary Variables /0/
+ 262  *         BinHigh Upperbound of Binary Variables /1/;
+ 263   
+ 264  *3. Define Variables
+ 265  VARIABLES
+ 266           Env(Years) Enviromental flows
+ 267           Yenv number of years LTRP flows were met
+ 268           NoEnv(Years) value assumes 1 when envromental flows are not met
+ 269           X(Loc,Months) volume of water flowing out of Dam or Stored in Res
+      ervoir;
+ 270   
+ 271   
+ 272  *3a. Define Select Variables as Binary
+ 273  BINARY VARIABLES
+ 274          NoEnv, Env;
+ 275   
+ 276   
+ 277  *3b. Define Positive Variables
+ 278  POSITIVE VARIABLES
+ 279           X;
+ 280   
+ 281  *4. COMBINE variables and data in equations
+ 282  EQUATIONS
+ 283  *Binary Constraints
+ 284  *     BinarySumConst(Years) used to restrict flows in june to either envir
+      omental or baseflow
+ 285           EnvBind(Years) used to restrict flows in June to either enviromen
+      tal or Hydropower
+ 286   
+ 287   
+ 288  *    NoEnvBinaryHigh(Years)   Upper bound on binary variables
+ 289  *     NoEnvBinaryLow(Years)    Lower bound on binary variables
+ 290       TotalEnv used to sum the number of times enviromental flows are met
+ 291  *Enviromental Flow Constraint if Env = 1
+ 292            Enviro1 year 1 enviro flow
+ 293            Enviro2 year 2 enviro flow
+ 294            Enviro3 year 3 enviro flow
+ 295            Enviro4 year 4 enviro flow
+ 296            Enviro5 year 5 enviro flow
+ 297  *F.G. Flow and Storage Constraints
+ 298   
+ 299  *This equaiton will be set later to determine maximum and minimum bounds o
+      f Water to be
+ 300  *Released over a five year period. This is my maximumize flows to Lake Pow
+      ell Constraint
+ 301   
+ 302  *#########################################################################
+      ############
+ 303     TotalOut used to sum total outflows from F.G. over the model period
+ 304  *#########################################################################
+      ###########
+ 305   
+ 306       MMinStore(Months) used to check minimum storage is met for each month
+ 307       MMaxStore(Months) used to check maximum storgage is not surpassed in 
+      each month
+ 308       MMaxFlowOut(Months) used to check that maximum outflow is not surpass
+      ed in any year
+ 309       Hydro(Months) used for hydropower constraints
+ 310       BF(Months)    used baseflow constraints
+ 311  *Conservation of Mass Constraints;
+ 312   
+ 313       IResMB used to require conservation of mass in the first timestep
+ 314       ResMB(Months) used to require conservation of mass in the following t
+      ime steps;
+ 315   
+ 316   
+ 317  *$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+      $$$$$$
+ 318  *Constraint Equations
+ 319  *$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+      $$$$$$
+ 320   
+ 321  *1.) First define binary constraints because it is easy to do so:
+ 322   
+ 323  *Forces either Enviromental Flows or No Enviromental Flows to occur for a 
+      given year in june
+ 324       EnvBind(Years).. Env(Years)+NoEnv(Years)=E= 1;
+ 325  *Function being maximized in this model, Sum # of years LTRP flows are met
+ 326  *   TotalEnv.. Yenv =E= Env('Y1')+Env('Y2')+Env('Y3')+Env('Y4')+Env('Y5');
+ 327       TotalEnv.. Yenv =E= SUM(Years,Env(Years));
+ 328   
+ 329  *Equation Really Driving Maximization,  require sum of outflows to be grea
+      ter than or equal to a given release volume
+ 330  TotalOut.. SUM((Months),X('Dam',Months))=G= TotRelease;
+ 331  *Env('Y1')*EnviroFlows('Y1','W3')+Env('Y2')*EnviroFlows('Y2','W3')+Env('Y3
+      ')*EnviroFlows('Y3','W3')+Env('Y4')*EnviroFlows('Y4','W3')+Env('Y5')*Envir
+      oFlows('Y5','W3');
+ 332   
+ 333  *2.) Define Storage and Outflow Constraint Equations
+ 334   
+ 335  *Flow is always less than bypass tunnel and spillway capacity
+ 336       MMaxFlowOut(Months).. X('Dam',Months) =L= MaxFlowOut;
+ 337   
+ 338  *Flow is always greater than hydropower constraints
+ 339        Hydro(Months).. X('Dam',Months) =G= HydroPower(Months);
+ 340   
+ 341  *Flow is always greater than baseflow constraints, ColoradoPikeMinnow Summ
+      er Base Flows are built into BaseFlows
+ 342       BF(Months).. X('Dam',Months)=G= BaseFlows(Months);
+ 343   
+ 344  *Minimum storage constraint. Corresponds to reservoir elevation midway bet
+      ween rated hydropower
+ 345  *Elevation and minimum hydropower elevation needed for hydropower
+ 346           MMinStore(Months).. X('Res',Months) =G= MinStore;
+ 347   
+ 348  *Maximum storage constraint. Corresponds to
+ 349           MMaxStore(Months).. X('Res',Months)=L= MaxStore;
+ 350   
+ 351  *3.) Define Enviromental MIP LTRP Flow
+ 352  *When this contraint is satisified Enviromental flows are met, I am fairly
+       sure
+ 353  *Multiplying the EnviroFlows parameter by the binary Env Variable will all
+      ow the model
+ 354  *Flexibility in choosing to trying to meet enviromental flows or using hyd
+      ropower
+ 355  *constraint in June
+ 356            Enviro1.. X('Dam','M6')=G= Env('Y1')*EnviroFlows('Y1','W3')+Hydr
+      oPower('M6')*NoEnv('Y1');
+ 357            Enviro2.. X('Dam','M18')=G= Env('Y2')*EnviroFlows('Y2','W3')+Hyd
+      roPower('M18')*NoEnv('Y2');
+ 358            Enviro3.. X('Dam','M30')=G= Env('Y3')*EnviroFlows('Y3','W3')+Hyd
+      roPower('M30')*NoEnv('Y3');
+ 359            Enviro4.. X('Dam','M42')=G= Env('Y4')*EnviroFlows('Y4','W3')+Hyd
+      roPower('M42')*NoEnv('Y4');
+ 360            Enviro5.. X('Dam','M54')=G= Env('Y5')*EnviroFlows('Y5','W3')+Hyd
+      roPower('M54')*NoEnv('Y5');
+ 361   
+ 362  *4.) Define Minimum allowable total flow to Lake Powell for 5 year period
+ 363  *Note: I am going to start this constraint extremely low and then incremen
+      t to see
+ 364  *when it binds, and finally when it causes the model to become unfeasible
+ 365  *This will be difficult for determininigs mixes of wet, dry, avg years
+ 366  *I believe intial storage volume will heavily influence this constraint as
+      well
+ 367   
+ 368  *3.) Define Massbalance Equations
+ 369  *Intial Reservoir Mass Balance,
+ 370  IResMB.. X('Res','M1')=E= FlowIn('M1')+IntStrg-X('Dam','M1');
+ 371   
+ 372  * Following timesteps reservoir mass balance
+ 373  ResMB(Months)$(ORD(Months)ge 2 ).. X('Res',Months)=E= FlowIn(Months)+X('Re
+      s',Months-1)-X('Dam',Months) ;
+ 374   
+ 375   
+ 376   
+ 377   
+ 378  *5. DEFINE the MODEL from the Equations
+ 379  MODEL FlamingGorge /ALL/;
+ 380           option solslack = 1;
+ 381   
+ 382  *6. Solve the Model as an MIP
+ 383  SOLVE FlamingGorge USING MIP MAXIMIZING Yenv;
+ 384   
+ 385  *7. Dump File to Excel Workbook
+ 386  Execute_Unload "SemesterProj.gdx";
+ 387  * Dump the gdx file to an Excel workbook
+ 388  Execute "gdx2xls SemesterProj.gdx"
+ 389  * To open the GDX file in the GAMS IDE, select File => Open.
+ 390  * In the Open window, set Filetype to .gdx and select the file.
+ 391   
+ 392   
+ 393   
+ 394   
+ 395   
+ 396   
+ 397   
+
+
+COMPILATION TIME     =        0.000 SECONDS      3 MB  32.2.0 rc62c018 WEX-WEI
+GAMS 32.2.0  rc62c018 Released Aug 26, 2020 WEX-WEI x86 64bit/MS Windows - 12/12/20 22:20:51 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Equation Listing    SOLVE FlamingGorge Using MIP From line 383
+
+
+---- EnvBind  =E=  used to restrict flows in June to either enviromental or Hydr
+                   opower
+
+EnvBind(Y1)..  Env(Y1) + NoEnv(Y1) =E= 1 ; (LHS = 0, INFES = 1 ****)
+     
+EnvBind(Y2)..  Env(Y2) + NoEnv(Y2) =E= 1 ; (LHS = 0, INFES = 1 ****)
+     
+EnvBind(Y3)..  Env(Y3) + NoEnv(Y3) =E= 1 ; (LHS = 0, INFES = 1 ****)
+     
+REMAINING 2 ENTRIES SKIPPED
+
+
+---- TotalEnv  =E=  used to sum the number of times enviromental flows are met
+
+TotalEnv..  - Env(Y1) - Env(Y2) - Env(Y3) - Env(Y4) - Env(Y5) + Yenv =E= 0 ;
+     
+      (LHS = 0)
+     
+
+---- Enviro1  =G=  year 1 enviro flow
+
+Enviro1..  - 473652.89*Env(Y1) - 124661.157*NoEnv(Y1) + X(Dam,M6) =G= 0 ;
+     
+      (LHS = 0)
+     
+
+---- Enviro2  =G=  year 2 enviro flow
+
+Enviro2..  - 473652.89*Env(Y2) - 124661.157*NoEnv(Y2) + X(Dam,M18) =G= 0 ;
+     
+      (LHS = 0)
+     
+
+---- Enviro3  =G=  year 3 enviro flow
+
+Enviro3..  - 473652.89*Env(Y3) - 124661.157*NoEnv(Y3) + X(Dam,M30) =G= 0 ;
+     
+      (LHS = 0)
+     
+
+---- Enviro4  =G=  year 4 enviro flow
+
+Enviro4..  - 473652.89*Env(Y4) - 124661.157*NoEnv(Y4) + X(Dam,M42) =G= 0 ;
+     
+      (LHS = 0)
+     
+
+---- Enviro5  =G=  year 5 enviro flow
+
+Enviro5..  - 473652.89*Env(Y5) - 124661.157*NoEnv(Y5) + X(Dam,M54) =G= 0 ;
+     
+      (LHS = 0)
+     
+
+---- TotalOut  =G=  used to sum total outflows from F.G. over the model period
+
+TotalOut..  X(Dam,M1) + X(Dam,M2) + X(Dam,M3) + X(Dam,M4) + X(Dam,M5)
+     
+      + X(Dam,M6) + X(Dam,M7) + X(Dam,M8) + X(Dam,M9) + X(Dam,M10) + X(Dam,M11)
+     
+      + X(Dam,M12) + X(Dam,M13) + X(Dam,M14) + X(Dam,M15) + X(Dam,M16)
+     
+      + X(Dam,M17) + X(Dam,M18) + X(Dam,M19) + X(Dam,M20) + X(Dam,M21)
+     
+      + X(Dam,M22) + X(Dam,M23) + X(Dam,M24) + X(Dam,M25) + X(Dam,M26)
+     
+      + X(Dam,M27) + X(Dam,M28) + X(Dam,M29) + X(Dam,M30) + X(Dam,M31)
+     
+      + X(Dam,M32) + X(Dam,M33) + X(Dam,M34) + X(Dam,M35) + X(Dam,M36)
+     
+      + X(Dam,M37) + X(Dam,M38) + X(Dam,M39) + X(Dam,M40) + X(Dam,M41)
+     
+      + X(Dam,M42) + X(Dam,M43) + X(Dam,M44) + X(Dam,M45) + X(Dam,M46)
+     
+      + X(Dam,M47) + X(Dam,M48) + X(Dam,M49) + X(Dam,M50) + X(Dam,M51)
+     
+      + X(Dam,M52) + X(Dam,M53) + X(Dam,M54) + X(Dam,M55) + X(Dam,M56)
+     
+      + X(Dam,M57) + X(Dam,M58) + X(Dam,M59) + X(Dam,M60) =G= 7470874.141 ;
+     
+      (LHS = 0, INFES = 7470874.141 ****)
+     
+
+---- MMinStore  =G=  used to check minimum storage is met for each month
+
+MMinStore(M1)..  X(Res,M1) =G= 545757.5 ; (LHS = 0, INFES = 545757.5 ****)
+     
+MMinStore(M2)..  X(Res,M2) =G= 545757.5 ; (LHS = 0, INFES = 545757.5 ****)
+     
+MMinStore(M3)..  X(Res,M3) =G= 545757.5 ; (LHS = 0, INFES = 545757.5 ****)
+     
+REMAINING 57 ENTRIES SKIPPED
+
+
+---- MMaxStore  =L=  used to check maximum storgage is not surpassed in each mon
+                     th
+
+MMaxStore(M1)..  X(Res,M1) =L= 3086976 ; (LHS = 0)
+     
+MMaxStore(M2)..  X(Res,M2) =L= 3086976 ; (LHS = 0)
+     
+MMaxStore(M3)..  X(Res,M3) =L= 3086976 ; (LHS = 0)
+     
+REMAINING 57 ENTRIES SKIPPED
+
+
+---- MMaxFlowOut  =L=  used to check that maximum outflow is not surpassed in an
+                       y year
+
+MMaxFlowOut(M1)..  X(Dam,M1) =L= 511736 ; (LHS = 0)
+     
+MMaxFlowOut(M2)..  X(Dam,M2) =L= 511736 ; (LHS = 0)
+     
+MMaxFlowOut(M3)..  X(Dam,M3) =L= 511736 ; (LHS = 0)
+     
+REMAINING 57 ENTRIES SKIPPED
+
+
+---- Hydro  =G=  used for hydropower constraints
+
+Hydro(M1)..  X(Dam,M1) =G= 110062.8099 ; (LHS = 0, INFES = 110062.8099 ****)
+     
+Hydro(M2)..  X(Dam,M2) =G= 108932.2314 ; (LHS = 0, INFES = 108932.2314 ****)
+     
+Hydro(M3)..  X(Dam,M3) =G= 50745.12397 ; (LHS = 0, INFES = 50745.12397 ****)
+     
+REMAINING 57 ENTRIES SKIPPED
+
+
+---- BF  =G=  used baseflow constraints
+
+BF(M1)..  X(Dam,M1) =G= 61487.60331 ; (LHS = 0, INFES = 61487.60331 ****)
+     
+BF(M2)..  X(Dam,M2) =G= 55537.19008 ; (LHS = 0, INFES = 55537.19008 ****)
+     
+BF(M3)..  X(Dam,M3) =G= 49190.08264 ; (LHS = 0, INFES = 49190.08264 ****)
+     
+REMAINING 57 ENTRIES SKIPPED
+
+
+---- IResMB  =E=  used to require conservation of mass in the first timestep
+
+IResMB..  X(Res,M1) + X(Dam,M1) =E= 2727789.31 ;
+     
+      (LHS = 0, INFES = 2727789.31 ****)
+     
+
+---- ResMB  =E=  used to require conservation of mass in the following time step
+                 s
+
+ResMB(M2)..  - X(Res,M1) + X(Res,M2) + X(Dam,M2) =E= 108932.23 ;
+     
+      (LHS = 0, INFES = 108932.23 ****)
+     
+ResMB(M3)..  - X(Res,M2) + X(Res,M3) + X(Dam,M3) =E= 50745.12 ;
+     
+      (LHS = 0, INFES = 50745.12 ****)
+     
+ResMB(M4)..  - X(Res,M3) + X(Res,M4) + X(Dam,M4) =E= 49731.57 ;
+     
+      (LHS = 0, INFES = 49731.57 ****)
+     
+REMAINING 56 ENTRIES SKIPPED
+
+GAMS 32.2.0  rc62c018 Released Aug 26, 2020 WEX-WEI x86 64bit/MS Windows - 12/12/20 22:20:51 Page 3
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE FlamingGorge Using MIP From line 383
+
+
+---- Env  Enviromental flows
+
+Env(Y1)
+                (.LO, .L, .UP, .M = 0, 0, 1, 0)
+        1       EnvBind(Y1)
+       -1       TotalEnv
+  -473652.89    Enviro1
+
+Env(Y2)
+                (.LO, .L, .UP, .M = 0, 0, 1, 0)
+        1       EnvBind(Y2)
+       -1       TotalEnv
+  -473652.89    Enviro2
+
+Env(Y3)
+                (.LO, .L, .UP, .M = 0, 0, 1, 0)
+        1       EnvBind(Y3)
+       -1       TotalEnv
+  -473652.89    Enviro3
+
+REMAINING 2 ENTRIES SKIPPED
+
+---- Yenv  number of years LTRP flows were met
+
+Yenv
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+        1       TotalEnv
+
+
+---- NoEnv  value assumes 1 when envromental flows are not met
+
+NoEnv(Y1)
+                (.LO, .L, .UP, .M = 0, 0, 1, 0)
+        1       EnvBind(Y1)
+  -124661.157   Enviro1
+
+NoEnv(Y2)
+                (.LO, .L, .UP, .M = 0, 0, 1, 0)
+        1       EnvBind(Y2)
+  -124661.157   Enviro2
+
+NoEnv(Y3)
+                (.LO, .L, .UP, .M = 0, 0, 1, 0)
+        1       EnvBind(Y3)
+  -124661.157   Enviro3
+
+REMAINING 2 ENTRIES SKIPPED
+
+---- X  volume of water flowing out of Dam or Stored in Reservoir
+
+X(Res,M1)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+        1       MMinStore(M1)
+        1       MMaxStore(M1)
+        1       IResMB
+       -1       ResMB(M2)
+
+X(Res,M2)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+        1       MMinStore(M2)
+        1       MMaxStore(M2)
+        1       ResMB(M2)
+       -1       ResMB(M3)
+
+X(Res,M3)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+        1       MMinStore(M3)
+        1       MMaxStore(M3)
+        1       ResMB(M3)
+       -1       ResMB(M4)
+
+REMAINING 117 ENTRIES SKIPPED
+GAMS 32.2.0  rc62c018 Released Aug 26, 2020 WEX-WEI x86 64bit/MS Windows - 12/12/20 22:20:51 Page 4
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE FlamingGorge Using MIP From line 383
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS          15     SINGLE EQUATIONS          372
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES          131
+NON ZERO ELEMENTS           570     DISCRETE VARIABLES         10
+
+
+GENERATION TIME      =        0.031 SECONDS      4 MB  32.2.0 rc62c018 WEX-WEI
+GAMS 32.2.0  rc62c018 Released Aug 26, 2020 WEX-WEI x86 64bit/MS Windows - 12/12/20 22:20:51 Page 5
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE FlamingGorge Using MIP From line 383
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   FlamingGorge        OBJECTIVE  Yenv
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  383
+
+**** SOLVER STATUS     1 Normal Completion         
+**** MODEL STATUS      10 Integer Infeasible       
+**** OBJECTIVE VALUE               NA
+
+ RESOURCE USAGE, LIMIT          0.078 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+
+IBM ILOG CPLEX   32.2.0 rc62c018 Released Aug 26, 2020 WEI x86 64bit/MS Window
+--- GAMS/Cplex Link licensed for continuous and discrete problems.
+Cplex 12.10.0.0
+
+Space for names approximately 0.01 Mb
+Use option 'names no' to turn use of names off
+MIP status(103): integer infeasible
+Cplex Time: 0.08sec (det. 0.42 ticks)
+Problem is integer infeasible.
+
+No solution returned
+GAMS 32.2.0  rc62c018 Released Aug 26, 2020 WEX-WEI x86 64bit/MS Windows - 12/12/20 22:20:51 Page 6
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+E x e c u t i o n
+
+
+EXECUTION TIME       =        1.735 SECONDS      4 MB  32.2.0 rc62c018 WEX-WEI
+
+
+USER: Small MUD - 5 User License                     G200622/0001AP-GEN
+      Utah State University, Utah Water Research Laboratory      DC7087
+      License for teaching and research at degree granting institutions
+
+
+**** FILE SUMMARY
+
+Input      C:\Users\Sharp Student\Documents\WRSA\GAMS\GitHub\CEE-6410-Campana\Se
+           mesterProjectCodeMonthsONLY.gms
+Output     C:\Users\Sharp Student\Documents\WRSA\GAMS\GitHub\CEE-6410-Campana\Se
+           mesterProjectCodeMonthsONLY.lst
