@@ -1,7 +1,53 @@
 $ontext
 
 CEE 6410 - Water Resources Systems Analysis
-Semester Project Code
+
+Flaming Gorge Managment Objectives Tradeoffs With Imposed Managment Objective
+of Maximizing Releases to Lake Powell.
+
+Written By: Patrick Campana
+Contact Info: patrickcampana555@gmail.com
+
+Model Status: Fails to work as intended, problem likely with how binary
+variable Env is being used by the model.
+
+
+Model Description:
+
+Models Flaming Gorge Dam releases and hydrologic inputs for a 5 year period. Utilizes
+monthly times step. Model was designed to examine trade off in satisfying 7 different
+managment objectives. These objectives are:
+
+1.        Satisfy hydropower demand
+2.        Maintain enough storage capacity to successfully route floods
+3.        Maintain enough storage to meet water supply demands
+4.        Satisfy baseflow requirements
+5.        Maximize the number of years environmental spring flow releases are met for Humpback Chub larvae flood plain access in Reach 2
+6.        Maximize the number of years environmental summer base flows are met for Colorado Pikeminnows in Reach 2.
+7.        Maximize the flow sent to Lake Powell from Flaming Gorge
+
+
+Model was intially designed to use hydrologic scenarios and, therefore, all variables
+had(Location,Month,Year) dimensions. However I could not figure out how to properly
+reference the Year and Month ordinates when coding my mass balance constraints
+so I converted everything to months and removed the year dimension from most variables,
+hence the title of the file SemseterProjectCodeMonthsONLY.
+
+Data for different hydrologic scenarios can be copied directly out of the spreadsheet in this github repository
+called F.G._MODEL_MASTER_DATASHEET_PLUS_EXCEL_MODEL.xlsm. The hydrologic data is
+in the last three sheets of the worksheet. The current model uses the wet hydrologic
+scenario 5 years in a row. The monthly flow demands refer to specific hydrologic
+scenarios. Therefore make sure to sync the hydrologic scenrios of the hydrologic inputs
+and the monthly flow demands. In addition make sure to set the baseflow in the month
+of June to zero to allow the hydropower constraint to bind in the month of June.
+Enviromental Releases in the month of June are controlled by the EnviroFlows variable
+
+The binary variable "Env" in this code is intended to be multiplied by the EnviroFlows Value
+and be used as X('Dam',M6,M18,M30,M42,M54) constraint for the month of June. That way the model could turn
+the LTRP flow on and off if the model became infeasible by meeting it. However,
+considering this not what happens I guessing this is not how the MIP solver works.
+
+All flow and storage volumes are in Ac-ft/month and Ac-ft respectively.
 
 $offtext
 
@@ -149,6 +195,7 @@ M59        77208.60
 M60        105988.76
 /
 
+*Remember to set M6, M18, M30, M42, M54 to zero, i.e. June
 BaseFlows(Months) Base Flow Constraints In Each Year Monthly Flow Volumes (Ac-ft)
 /M1        61487.60331
 M2        55537.19008
@@ -227,16 +274,6 @@ Y4        167147.11        287623.14        473652.89
 Y5        167147.11        287623.14        473652.89;
 
 
-*Baseflow Constraints:
-*Note This is set up so that It can be adjusted for different Hydrologic
-*Or Colorado Pike Minnow Summer Base Flow constraints
-*Currently it is set for my "Wet" hydrologic Scenario 5 years in a row and incorperates
-*colorado pikeminnow b.f. constraints into baseflow constraints
-
-
-
-
-
 SCALARS
 
 *Maximum outflow possible in one month. Does not consideer using the spillway
@@ -254,24 +291,27 @@ SCALARS
 
 *$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
          IntStrg Intial Reservoir Storage of F.G. Reservoir (Ac-ft) /2617726.50/
-         TotRelease Total Volume of Water Released Over Model Period /7270874.141/;
 *$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$2$$$$$$$$
 
-*Set Upper and lower bounds for binary Variables
-*         BinLow Lowerbound of Binary Variables /0/
-*         BinHigh Upperbound of Binary Variables /1/;
+
+*Total Monthly Flow Release Over the 5 year period. Estimate at first by setting
+*Zero then gradually increase
+
+*$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$2$$$$$$$$
+ TotRelease Total Volume of Water Released Over Model Period /7270874.141/;
+*$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$2$$$$$$$$
+
 
 *3. Define Variables
 VARIABLES
          Env(Years) Enviromental flows
          Yenv number of years LTRP flows were met
-         NoEnv(Years) value assumes 1 when envromental flows are not met
          X(Loc,Months) volume of water flowing out of Dam or Stored in Reservoir;
 
 
 *3a. Define Select Variables as Binary
 BINARY VARIABLES
-        NoEnv, Env;
+       Env;
 
 
 *3b. Define Positive Variables
@@ -281,19 +321,19 @@ POSITIVE VARIABLES
 *4. COMBINE variables and data in equations
 EQUATIONS
 *Binary Constraints
-*     BinarySumConst(Years) used to restrict flows in june to either enviromental or baseflow
-         EnvBind(Years) used to restrict flows in June to either enviromental or Hydropower
+         TotalEnv used to sum the number of times enviromental flows are met
 
+*Note do not need to set lower bound of Env to 0 and upper to 1
+*These are GAMS defaults for binary variables and therefore do not need to be specified with a
+*Constraint
 
-*    NoEnvBinaryHigh(Years)   Upper bound on binary variables
-*     NoEnvBinaryLow(Years)    Lower bound on binary variables
-     TotalEnv used to sum the number of times enviromental flows are met
 *Enviromental Flow Constraint if Env = 1
-          Enviro1 year 1 enviro flow
-          Enviro2 year 2 enviro flow
-          Enviro3 year 3 enviro flow
-          Enviro4 year 4 enviro flow
-          Enviro5 year 5 enviro flow
+         Enviro1 year 1 enviro flow
+         Enviro2 year 2 enviro flow
+         Enviro3 year 3 enviro flow
+         Enviro4 year 4 enviro flow
+         Enviro5 year 5 enviro flow
+
 *F.G. Flow and Storage Constraints
 
 *This equaiton will be set later to determine maximum and minimum bounds of Water to be
@@ -318,19 +358,12 @@ EQUATIONS
 *Constraint Equations
 *$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
-*1.) First define binary constraints because it is easy to do so:
-
-*Forces either Enviromental Flows or No Enviromental Flows to occur for a given year in june
-     EnvBind(Years).. Env(Years)+NoEnv(Years)=E= 1;
 *Function being maximized in this model, Sum # of years LTRP flows are met
 *   TotalEnv.. Yenv =E= Env('Y1')+Env('Y2')+Env('Y3')+Env('Y4')+Env('Y5');
      TotalEnv.. Yenv =E= SUM(Years,Env(Years));
 
-*Equation Really Driving Maximization,  require sum of outflows to be greater than or equal to a given release volume
+*Equation relying on set Lake Powell Release Volume
 TotalOut.. SUM((Months),X('Dam',Months))=G= TotRelease;
-*Env('Y1')*EnviroFlows('Y1','W3')+Env('Y2')*EnviroFlows('Y2','W3')+Env('Y3')*EnviroFlows('Y3','W3')+Env('Y4')*EnviroFlows('Y4','W3')+Env('Y5')*EnviroFlows('Y5','W3');
-
-*2.) Define Storage and Outflow Constraint Equations
 
 *Flow is always less than bypass tunnel and spillway capacity
      MMaxFlowOut(Months).. X('Dam',Months) =L= MaxFlowOut;
@@ -353,11 +386,11 @@ TotalOut.. SUM((Months),X('Dam',Months))=G= TotRelease;
 *Multiplying the EnviroFlows parameter by the binary Env Variable will allow the model
 *Flexibility in choosing to trying to meet enviromental flows or using hydropower
 *constraint in June
-          Enviro1.. X('Dam','M6')=G= Env('Y1')*EnviroFlows('Y1','W3')+HydroPower('M6')*NoEnv('Y1');
-          Enviro2.. X('Dam','M18')=G= Env('Y2')*EnviroFlows('Y2','W3')+HydroPower('M18')*NoEnv('Y2');
-          Enviro3.. X('Dam','M30')=G= Env('Y3')*EnviroFlows('Y3','W3')+HydroPower('M30')*NoEnv('Y3');
-          Enviro4.. X('Dam','M42')=G= Env('Y4')*EnviroFlows('Y4','W3')+HydroPower('M42')*NoEnv('Y4');
-          Enviro5.. X('Dam','M54')=G= Env('Y5')*EnviroFlows('Y5','W3')+HydroPower('M54')*NoEnv('Y5');
+          Enviro1.. X('Dam','M6')=G= Env('Y1')*EnviroFlows('Y1','W3');
+          Enviro2.. X('Dam','M18')=G= Env('Y2')*EnviroFlows('Y2','W3');
+          Enviro3.. X('Dam','M30')=G= Env('Y3')*EnviroFlows('Y3','W3');
+          Enviro4.. X('Dam','M42')=G= Env('Y4')*EnviroFlows('Y4','W3');
+          Enviro5.. X('Dam','M54')=G= Env('Y5')*EnviroFlows('Y5','W3');
 
 *4.) Define Minimum allowable total flow to Lake Powell for 5 year period
 *Note: I am going to start this constraint extremely low and then increment to see
